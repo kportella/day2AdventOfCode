@@ -14,7 +14,7 @@ try
         while ((line = file.ReadLine()) != null)
         {
             var (colorCounts, gameNumber) = SepareteGameAndBalls(line);
-            if (VerifyBallsQuantity(colorCounts)) sum += gameNumber;
+            sum += VerifyBallsQuantity(colorCounts);
         }
         Console.WriteLine($"Sum: {sum}");
     }
@@ -26,24 +26,29 @@ catch (Exception e)
     Console.WriteLine(e.Message);
 }
 
-static bool VerifyBallsQuantity(List<(string, int)> colorCounts)
+static int VerifyBallsQuantity(List<(string, int)> colorCounts)
 {
-    foreach(var color in colorCounts)
+    int greaterBlue = 0;
+    int greaterGreen = 0;
+    int greaterRed = 0;
+
+    foreach (var color in colorCounts)
     {
-        if(color.Item1 == "blue")
+        if (color.Item1 == "blue")
         {
-            if (color.Item2 > 14) return false;
+            if (color.Item2 > greaterBlue) greaterBlue = color.Item2;
         }
         if (color.Item1 == "red")
         {
-            if (color.Item2 > 12) return false;
+            if (color.Item2 > greaterRed) greaterRed = color.Item2;
         }
         if (color.Item1 == "green")
         {
-            if (color.Item2 > 13) return false;
+            if (color.Item2 > greaterGreen) greaterGreen = color.Item2;
         }
     }
-    return true;
+
+    return greaterBlue * greaterGreen * greaterRed;
 }
 
 static (List<(string, int)>, int) SepareteGameAndBalls(string line)
